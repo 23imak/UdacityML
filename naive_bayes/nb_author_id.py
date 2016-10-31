@@ -27,7 +27,11 @@ features_train, features_test, labels_train, labels_test = preprocess()
 #########################################################
 ### your code goes here ###
 
-clf =
+clf = GaussianNB()
+clf = clf.fit(features_train,labels_train)
+prediction = clf.predict(features_test)
+
+print accuracy_score(prediction,labels_test)
 
 
 
