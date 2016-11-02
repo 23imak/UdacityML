@@ -3,6 +3,8 @@
 import matplotlib.pyplot as plt
 from prep_terrain_data import makeTerrainData
 from class_vis import prettyPicture
+from sklearn.metrics import accuracy_score
+from time import time
 
 features_train, labels_train, features_test, labels_test = makeTerrainData()
 
@@ -34,11 +36,50 @@ plt.show()
 
 
 
+# K-Nearest-Neighbors Classifer
+from sklearn.neighbors import KNeighborsClassifier
+clf = KNeighborsClassifier(n_neighbors=22)
+t0 = time()
+clf.fit(features_train,labels_train)
+print "Training: ", round(time() - t0, 3), "s"
+t1 = time()
+pred = clf.predict(features_test)
+print "Prediction: ", round(time() - t1, 3), "s"
+print "Accuracy: ", accuracy_score(pred, labels_test)
 
 
+
+'''
+# AdaBoost Classifier
+from sklearn.ensemble import AdaBoostClassifier
+clf = AdaBoostClassifier(n_estimators=50)
+t0 = time()
+clf.fit(features_train, labels_train)
+print "Training: ", round(time() - t0, 3), "s"
+t1 = time()
+pred = clf.predict(features_test)
+print "Prediction: ", round(time() - t1, 3), "s"
+print accuracy_score(pred, labels_test)
+
+'''
+
+'''
+# Random Forests Classifer
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier(n_estimators=19)
+t0 = time()
+clf = clf.fit(features_train, labels_train)
+print "Training: ", round(time() - t0, 3), "s"
+t1 = time()
+pred = clf.predict(features_test)
+print "Prediction: ", round(time() - t1, 3), "s"
+print "Accuracy: ", accuracy_score(pred, labels_test)
+
+'''
 
 
 try:
     prettyPicture(clf, features_test, labels_test)
 except NameError:
     pass
+
