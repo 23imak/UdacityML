@@ -30,6 +30,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 from sklearn.decomposition import RandomizedPCA
 from sklearn.svm import SVC
+from sklearn.metrics import f1_score
 
 # Display progress logs on stdout
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
@@ -66,7 +67,18 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random
 ###############################################################################
 # Compute a PCA (eigenfaces) on the face dataset (treated as unlabeled
 # dataset): unsupervised feature extraction / dimensionality reduction
-n_components = 150
+#n_components = 150
+
+#n_components = 10 # crashes
+#n_components = 15 # f1 score average of 0.65
+#n_components = 25 # f1 score average of 0.74
+#n_components = 50 # f1 score average of 0.81
+#n_components = 100 # f1 score average of 0.85
+#n_components = 150 # f1 score average of 0.83
+n_components = 200 # f1 score average of 0.85
+#n_components = 300 # f1 score average of 0.8
+
+
 
 print "Extracting the top %d eigenfaces from %d faces" % (n_components, X_train.shape[0])
 t0 = time()
@@ -75,12 +87,16 @@ print "done in %0.3fs" % (time() - t0)
 
 eigenfaces = pca.components_.reshape((n_components, h, w))
 
+
+
 print "Projecting the input data on the eigenfaces orthonormal basis"
 t0 = time()
+
 X_train_pca = pca.transform(X_train)
 X_test_pca = pca.transform(X_test)
 print "done in %0.3fs" % (time() - t0)
 
+print "Variance", pca.explained_variance_ratio_[:2]
 
 ###############################################################################
 # Train a SVM classification model
@@ -110,6 +126,8 @@ print "done in %0.3fs" % (time() - t0)
 print classification_report(y_test, y_pred, target_names=target_names)
 print confusion_matrix(y_test, y_pred, labels=range(n_classes))
 
+
+print "F1 score", f1_score(y_pred,y_test)
 
 ###############################################################################
 # Qualitative evaluation of the predictions using matplotlib
